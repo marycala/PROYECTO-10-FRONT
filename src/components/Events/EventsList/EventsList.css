@@ -1,0 +1,98 @@
+.event {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: transparent;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.event:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event > img {
+  width: 100%;
+  max-width: 650px;
+  object-fit: contain;
+}
+
+.event > h3 {
+  font-size: 4vw;
+  color: var(--vr-color-text);
+  -webkit-text-stroke: 0.1px black;
+}
+
+.info {
+  max-width: 500px;
+}
+
+.info > p {
+  font-size: larger;
+}
+
+#attendee {
+  width: 100%;
+}
+
+.confirm {
+  width: 100%;
+  max-width: 150px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.confirm:hover {
+  transform: scale(1.1);
+}
+
+.delete {
+  width: 100%;
+  max-width: 150px;
+  color: black;
+  background-color: var(--vr-color-1);
+  font-size: 18px;
+}
+
+.delete:hover {
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .event {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+  }
+
+  .event > img {
+    height: auto;
+  }
+}
+
+@media (max-width: 550px) {
+  .event > img {
+    max-width: 300px;
+  }
+  .info {
+    font-size: small;
+  }
+}
+
+@media (max-width: 480px) {
+  .event > h3 {
+    font-size: 24px;
+  }
+
+  .event {
+    padding: 5px;
+  }
+
+  .confirm {
+    font-size: 14px;
+    padding: 8px;
+  }
+}

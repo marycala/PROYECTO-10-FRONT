@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css?family=Lobster|Open+Sans:300,400,600,700,800');
+
+/* Reset */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Lobster', sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+:root {
+  /* COLORS */
+  --vr-color-1: #ffffff;
+  --vr-color-2: #f5deb3;
+  --vr-color-3: #6a4c6c;
+
+  /* Anchor */
+  --vr-anchor-color-text: var(--vr-color-1);
+  --vr-anchor-color-button: var(--vr-color-3);
+
+  /* Main */
+  --vr-color-text: var(--vr-color-3);
+  --vr-color-line: var(--vr-color-3);
+  --vr-color-button: var(--vr-color-3);
+  --vr-color-text-button: var(--vr-color-1);
+  --vr-color-background: var(--vr-color-2);
+
+  /* SPACING */
+  --vr-margin-xs: 10px;
+  --vr-margin-s: 20px;
+  --vr-margin-m: 30px;
+  --vr-margin-l: 40px;
+  --vr-margin-xl: 50px;
+
+  --vr-padding-xs: 12px;
+  --vr-padding-s: 20px;
+  --vr-padding-m: 30px;
+  --vr-padding-l: 40px;
+  --vr-padding-xl: 150px;
+
+  --vr-gap-xs: 10px;
+  --vr-gap-s: 20px;
+  --vr-gap-m: 30px;
+  --vr-gap-l: 40px;
+  --vr-gap-xl: 50px;
+
+  --vr-border-radius-s: 15px;
+  --vr-border-radius-m: 20px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+main {
+  background: linear-gradient(135deg, #f3c6c6, #f3e5ab, #d0e7f9);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 633px;
+  box-sizing: border-box;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.home main {
+  width: 100%;
+  min-height: 100vh;
+  overflow: auto;
+}
+
+.login main,
+.register main {
+  background: linear-gradient(135deg, #f3c6c6, #f3e5ab, #d0e7f9);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--vr-gap-s);
+}
+
+input {
+  outline: none;
+  padding: var(--vr-padding-xs);
+  border: 2px solid var(--vr-color-line);
+  border-radius: var(--vr-border-radius-s);
+  background-color: var(--vr-color-background);
+}
+
+button {
+  background-color: var(--vr-color-button);
+  color: var(--vr-color-text-button);
+  height: 40px;
+  width: 100px;
+  border-radius: var(--vr-border-radius-s);
+  border: none;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  #form input {
+    max-width: 300px;
+  }
+
+  button {
+    width: 120px;
+    height: 40px;
+  }
+}

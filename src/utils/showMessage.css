@@ -1,0 +1,20 @@
+.message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  background-color: var(--vr-color-1);
+  padding: 1em;
+  border-radius: var(--vr-border-radius-s);
+  z-index: 1001;
+}
+.message.error {
+  color: red;
+  border-color: red;
+}
+
+.message.success {
+  color: green;
+  border-color: green;
+}
