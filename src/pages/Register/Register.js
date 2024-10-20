@@ -55,16 +55,17 @@ const RegisterForm = (fatherElement) => {
 }
 
 const submitRegister = async (name, email, password, form) => {
-  const formData = new FormData()
-  formData.append('userName', name)
-  formData.append('email', email)
-  formData.append('password', password)
+  const userData = {
+    userName: name,
+    email: email,
+    password: password
+  }
 
   try {
     const res = await apiFetch(
       'http://localhost:3000/api/v1/users/register',
       'POST',
-      formData
+      userData
     )
 
     if (!res.ok) {
@@ -72,12 +73,12 @@ const submitRegister = async (name, email, password, form) => {
         res.status === 400 ? 'Email is already in use' : 'An error has occurred'
       showMessage(form, errorMessage, true)
       return
+    } else {
+      await submitLogin(email, password, form)
+      showMessage(form, 'Registration successful! Redirecting...', false)
+
+      form.reset()
     }
-
-    await submitLogin(email, password, form)
-    showMessage(form, 'Registration successful! Redirecting...', false)
-
-    form.reset()
   } catch (error) {
     showMessage(form, 'Connection error. Please try again later.', true)
   }
