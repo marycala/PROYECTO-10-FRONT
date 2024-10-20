@@ -1,5 +1,7 @@
+const API_URL = process.env.API_URL || 'http://localhost:3000'
+
 export const apiFetch = async (
-  url,
+  endpoint,
   method = 'GET',
   body = null,
   form = null
@@ -19,7 +21,7 @@ export const apiFetch = async (
   }
 
   try {
-    const response = await fetch(url, options)
+    const response = await fetch(`${API_URL}${endpoint}`, options)
 
     if (response.status === 400 && form) {
       let pError = document.querySelector('.error')

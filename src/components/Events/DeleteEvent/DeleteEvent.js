@@ -8,10 +8,7 @@ export const deleteEvent = async (eventId) => {
 
   showLoader()
   try {
-    const res = await apiFetch(
-      `http://localhost:3000/api/v1/events/${eventId}`,
-      'DELETE'
-    )
+    const res = await apiFetch(`/api/v1/events/${eventId}`, 'DELETE')
 
     if (res.ok) {
       showMessage(eventElement, 'Event deleted successfully', false)

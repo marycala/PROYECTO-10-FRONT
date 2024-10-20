@@ -31,11 +31,7 @@ export const registerAttendance = async (eventId) => {
   showLoader()
 
   try {
-    const res = await apiFetch(
-      `http://localhost:3000/api/v1/attendees/${eventId}`,
-      'POST',
-      body
-    )
+    const res = await apiFetch(`/api/v1/attendees/${eventId}`, 'POST', body)
 
     if (res.ok) {
       showMessage(eventElement, 'Attendance confirmed', false)
