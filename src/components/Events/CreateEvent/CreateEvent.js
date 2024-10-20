@@ -68,7 +68,7 @@ const submitEvent = async (form, main) => {
 
   try {
     const res = await apiFetch(
-      `/api/v1/events/create/${userId}`,
+      `${API_URL}/api/v1/events/create/${userId}`,
       'POST',
       formData
     )

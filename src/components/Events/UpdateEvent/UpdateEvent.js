@@ -3,7 +3,7 @@ import { showMessage } from '../../../utils/showMessage'
 
 export const updateEvent = async (eventId) => {
   try {
-    const res = await apiFetch(`/api/v1/events/${eventId}`)
+    const res = await apiFetch(`${API_URL}/api/v1/events/${eventId}`)
 
     if (res.ok) {
       const event = await res.json()
