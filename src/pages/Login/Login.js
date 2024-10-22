@@ -49,11 +49,7 @@ export const submitLogin = async (email, password, form) => {
   const finalObject = { email, password }
 
   try {
-    const response = await apiFetch(
-      `${API_URL}/api/v1/users/login`,
-      'POST',
-      finalObject
-    )
+    const response = await apiFetch('/api/v1/users/login', 'POST', finalObject)
 
     if (response.status === 400) {
       showMessage(form, 'Incorrect Email or password', true)

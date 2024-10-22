@@ -38,14 +38,16 @@
   width: 100%;
 }
 
-.confirm {
+.confirm-attendance,
+.delete-attendance {
   width: 100%;
   max-width: 150px;
   padding: 10px;
   font-size: 16px;
 }
 
-.confirm:hover {
+.confirm-attendance:hover,
+.delete-attendance:hover {
   transform: scale(1.1);
 }
 

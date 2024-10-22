@@ -1,10 +1,10 @@
-import { isAuthenticated } from '../../../utils/auth'
 import { showLoader, hideLoader } from '../../Loader/Loader'
 import { apiFetch } from '../../../services/api'
 import { updateEvent } from '../UpdateEvent/UpdateEvent'
 import { showMessage } from '../../../utils/showMessage'
+import { isAuthenticated } from '../../../utils/auth'
 
-export const registerAttendance = async (eventId) => {
+export const deleteAttendance = async (attendeeId, eventId) => {
   const eventElement = document.querySelector(`[data-id="${eventId}"]`)
 
   if (!isAuthenticated()) {
@@ -31,21 +31,25 @@ export const registerAttendance = async (eventId) => {
   showLoader()
 
   try {
-    const res = await apiFetch(`/api/v1/attendees/${eventId}`, 'POST', body)
+    const res = await apiFetch(
+      `/api/v1/attendees/${attendeeId}`,
+      'DELETE',
+      body
+    )
 
     if (res.ok) {
-      showMessage(eventElement, 'Attendance confirmed', false)
+      showMessage(eventElement, 'Attendance removed successfully', false)
       updateEvent(eventId)
     } else {
       const errorData = await res.json()
       showMessage(
         eventElement,
-        errorData.message || 'You are already registered',
+        errorData.message || 'Error removing attendance',
         true
       )
     }
   } catch (error) {
-    showMessage(eventElement, 'Error confirming attendance', true)
+    showMessage(eventElement, 'Error removing attendance', true)
   } finally {
     hideLoader()
   }

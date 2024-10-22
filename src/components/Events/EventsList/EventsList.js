@@ -4,16 +4,20 @@ import { registerAttendance } from '../ConfirmAttendance/registerAttendance'
 import { deleteEvent } from '../DeleteEvent/DeleteEvent'
 import { showMessage } from '../../../utils/showMessage'
 import './EventsList.css'
+import { deleteAttendance } from '../DeleteAttendance/DeleteAttendance'
+import { apiFetch } from '../../../services/api'
+import { updateEvent } from '../UpdateEvent/UpdateEvent'
 
 export const EventsList = async () => {
   try {
-    const res = await fetch('http://localhost:3000/api/v1/events')
+    const res = await apiFetch('/api/v1/events')
 
     if (!res.ok) {
       const errorMessage = `Error fetching events: ${res.statusText}`
       showMessage(document.querySelector('main'), errorMessage, true)
       return
     }
+
     const events = await res.json()
 
     const eventsContainer = document.createElement('section')
@@ -33,14 +37,19 @@ export const EventsList = async () => {
       const img = document.createElement('img')
       const info = document.createElement('div')
       const buttonConfirm = document.createElement('button')
+      const buttonDelete = document.createElement('button')
 
       divEvent.className = 'event'
       divEvent.dataset.id = event._id
       title.textContent = event.title
       info.className = 'info'
       buttonConfirm.textContent = 'Confirm Attendance'
-      buttonConfirm.className = 'confirm'
+      buttonConfirm.className = 'confirm-attendance'
       buttonConfirm.dataset.id = event._id
+      buttonDelete.textContent = 'Delete Attendance'
+      buttonDelete.className = 'delete-attendance'
+      buttonDelete.style.display = 'none'
+      buttonDelete.dataset.id = event._id
 
       if (event.img) {
         img.src = event.img
@@ -74,7 +83,14 @@ export const EventsList = async () => {
           <p>Creator: ${event.creator.userName}</p>
           <p id="attendees-list">Attendees: </p>
         `
-        divEvent.append(title, img, info, attendeeList, buttonConfirm)
+        divEvent.append(
+          title,
+          img,
+          info,
+          attendeeList,
+          buttonConfirm,
+          buttonDelete
+        )
 
         if (user._id === event.creator._id || user.rol === 'admin') {
           const deleteButton = document.createElement('button')
@@ -91,6 +107,42 @@ export const EventsList = async () => {
 
           divEvent.appendChild(deleteButton)
         }
+
+        buttonConfirm.addEventListener('click', async () => {
+          const eventId = buttonConfirm.dataset.id
+          await registerAttendance(eventId)
+          await updateEvent(eventId)
+
+          buttonConfirm.style.display = 'none'
+          buttonDelete.style.display = 'block'
+          location.reload()
+        })
+
+        const isRegistered = event.attendees.some(
+          (attendee) => attendee.userId._id === user._id
+        )
+
+        if (isRegistered) {
+          buttonConfirm.style.display = 'none'
+          buttonDelete.style.display = 'block'
+          const registeredAttendee = event.attendees.find(
+            (attendee) => attendee.userId._id === user._id
+          )
+          if (registeredAttendee) {
+            buttonDelete.dataset.attendeeId = registeredAttendee._id
+          }
+        }
+
+        buttonDelete.addEventListener('click', async () => {
+          const attendeeId = buttonDelete.dataset.attendeeId
+          const eventId = buttonDelete.dataset.id
+          await deleteAttendance(attendeeId, eventId)
+          await updateEvent(eventId)
+
+          buttonConfirm.style.display = 'block'
+          buttonDelete.style.display = 'none'
+          location.reload()
+        })
       } else {
         info.innerHTML = `
           <p>Date: ${formattedDate}</p>
@@ -102,13 +154,9 @@ export const EventsList = async () => {
         divEvent.append(title, img, info)
       }
 
-      buttonConfirm.addEventListener('click', () => {
-        const eventId = buttonConfirm.dataset.id
-        registerAttendance(eventId)
-      })
-
       eventsContainer.append(divEvent)
     }
+
     return eventsContainer
   } catch (error) {
     showMessage(
