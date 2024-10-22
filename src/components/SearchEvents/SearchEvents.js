@@ -1,15 +1,16 @@
+import { apiFetch } from '../../services/api'
 import { isAuthenticated } from '../../utils/auth'
 import { formatDate } from '../../utils/dateUtils'
 import { showMessage } from '../../utils/showMessage'
 import { registerAttendance } from '../Events/ConfirmAttendance/registerAttendance'
+import { deleteAttendance } from '../Events/DeleteAttendance/DeleteAttendance'
 import { deleteEvent } from '../Events/DeleteEvent/DeleteEvent'
+import { updateEvent } from '../Events/UpdateEvent/UpdateEvent'
 
 export const SearchEvents = async (searchTerm) => {
   try {
-    const res = await fetch(
-      `http://localhost:3000/api/v1/events/search/title/${encodeURIComponent(
-        searchTerm
-      )}`
+    const res = await apiFetch(
+      `/api/v1/events/search/title/${encodeURIComponent(searchTerm)}`
     )
 
     if (!res.ok) {
@@ -39,6 +40,7 @@ export const SearchEvents = async (searchTerm) => {
       const img = document.createElement('img')
       const info = document.createElement('div')
       const buttonConfirm = document.createElement('button')
+      const buttonDelete = document.createElement('button')
 
       divEvent.className = 'event'
       divEvent.dataset.id = event._id
@@ -47,6 +49,10 @@ export const SearchEvents = async (searchTerm) => {
       buttonConfirm.textContent = 'Confirm Attendance'
       buttonConfirm.className = 'confirm'
       buttonConfirm.dataset.id = event._id
+      buttonDelete.textContent = 'Delete Attendance'
+      buttonDelete.className = 'delete-attendance'
+      buttonDelete.style.display = 'none'
+      buttonDelete.dataset.id = event._id
 
       if (event.img) {
         img.src = event.img
@@ -81,7 +87,14 @@ export const SearchEvents = async (searchTerm) => {
           <p id="attendees-list">Attendees: </p>
         `
 
-        divEvent.append(title, img, info, attendeeList, buttonConfirm)
+        divEvent.append(
+          title,
+          img,
+          info,
+          attendeeList,
+          buttonConfirm,
+          buttonDelete
+        )
 
         if (user._id === event.creator._id || user.rol === 'admin') {
           const deleteButton = document.createElement('button')
@@ -98,6 +111,41 @@ export const SearchEvents = async (searchTerm) => {
 
           divEvent.appendChild(deleteButton)
         }
+        buttonConfirm.addEventListener('click', async () => {
+          const eventId = buttonConfirm.dataset.id
+          await registerAttendance(eventId)
+          await updateEvent(eventId)
+
+          buttonConfirm.style.display = 'none'
+          buttonDelete.style.display = 'block'
+          location.reload()
+        })
+
+        const isRegistered = event.attendees.some(
+          (attendee) => attendee.userId._id === user._id
+        )
+
+        if (isRegistered) {
+          buttonConfirm.style.display = 'none'
+          buttonDelete.style.display = 'block'
+          const registeredAttendee = event.attendees.find(
+            (attendee) => attendee.userId._id === user._id
+          )
+          if (registeredAttendee) {
+            buttonDelete.dataset.attendeeId = registeredAttendee._id
+          }
+        }
+
+        buttonDelete.addEventListener('click', async () => {
+          const attendeeId = buttonDelete.dataset.attendeeId
+          const eventId = buttonDelete.dataset.id
+          await deleteAttendance(attendeeId, eventId)
+          await updateEvent(eventId)
+
+          buttonConfirm.style.display = 'block'
+          buttonDelete.style.display = 'none'
+          location.reload()
+        })
       } else {
         info.innerHTML = `
           <p>Date: ${formattedDate}</p>
@@ -108,11 +156,6 @@ export const SearchEvents = async (searchTerm) => {
         `
         divEvent.append(title, img, info)
       }
-
-      buttonConfirm.addEventListener('click', () => {
-        const eventId = buttonConfirm.dataset.id
-        registerAttendance(eventId)
-      })
 
       eventsContainer.append(divEvent)
     }
