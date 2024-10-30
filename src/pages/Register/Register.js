@@ -62,11 +62,7 @@ const submitRegister = async (name, email, password, form) => {
   }
 
   try {
-    const res = await apiFetch(
-      `${API_URL}/api/v1/users/register`,
-      'POST',
-      userData
-    )
+    const res = await apiFetch(`/api/v1/users/register`, 'POST', userData)
 
     if (!res.ok) {
       const errorMessage =
