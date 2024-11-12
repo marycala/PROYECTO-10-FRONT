@@ -46,6 +46,5 @@ export const apiFetch = async (
     return response
   } catch (error) {
     console.error('Fetch error:', error)
-    alert('An error has occurred')
   }
 }
