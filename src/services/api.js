@@ -21,6 +21,8 @@ export const apiFetch = async (
   if (body && typeof body === 'object' && !(body instanceof FormData)) {
     options.headers['Content-Type'] = 'application/json'
     options.body = JSON.stringify(body)
+  } else if (body instanceof FormData) {
+    options.body = body
   }
 
   try {
@@ -36,15 +38,20 @@ export const apiFetch = async (
         form.append(pError)
       }
 
-      const errorData = await response.json()
-      pError.textContent = `Error: ${
-        errorData.message || 'An error has occurred'
-      }`
+      const errorText = await response.text()
+      try {
+        const errorData = JSON.parse(errorText)
+        pError.textContent = `Error: ${
+          errorData.message || 'An error has occurred'
+        }`
+      } catch {
+        pError.textContent = `Error: ${errorText}`
+      }
       return null
     }
 
     return response
   } catch (error) {
-    console.error('Fetch error:', error)
+    return null
   }
 }
