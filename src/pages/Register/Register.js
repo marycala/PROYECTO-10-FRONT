@@ -55,6 +55,15 @@ const RegisterForm = (fatherElement) => {
 }
 
 const submitRegister = async (name, email, password, form) => {
+  if (password.lenght < 6 || password.lenght > 12) {
+    showMessage(
+      document.querySelector('main'),
+      'Password must be between 6 and 12 characters.',
+      true
+    )
+    return
+  }
+
   const userData = {
     userName: name,
     email: email,
