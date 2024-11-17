@@ -1,12 +1,13 @@
+import './EventsList.css'
 import { isAuthenticated } from '../../../utils/auth'
 import { formatDate } from '../../../utils/dateUtils'
 import { registerAttendance } from '../ConfirmAttendance/registerAttendance'
 import { deleteEvent } from '../DeleteEvent/DeleteEvent'
 import { showMessage } from '../../../utils/showMessage'
-import './EventsList.css'
 import { deleteAttendance } from '../DeleteAttendance/DeleteAttendance'
 import { apiFetch } from '../../../services/api'
 import { updateEvent } from '../UpdateEvent/UpdateEvent'
+import { showModal } from '../../../utils/showModal/showModal'
 
 export const EventsList = async () => {
   try {
@@ -19,7 +20,6 @@ export const EventsList = async () => {
     }
 
     const events = await res.json()
-
     const eventsContainer = document.createElement('section')
     eventsContainer.id = 'events-container'
     const user = JSON.parse(localStorage.getItem('user'))
@@ -98,11 +98,15 @@ export const EventsList = async () => {
           deleteButton.className = 'delete'
           deleteButton.dataset.id = event._id
 
-          deleteButton.addEventListener('click', async () => {
-            if (confirm('Are you sure you want to delete this event?')) {
-              const eventId = deleteButton.dataset.id
-              await deleteEvent(eventId)
-            }
+          deleteButton.addEventListener('click', () => {
+            const eventId = deleteButton.dataset.id
+            showModal(
+              'Are you sure you want to delete this event?',
+              async () => {
+                await deleteEvent(eventId)
+                divEvent.remove()
+              }
+            )
           })
 
           divEvent.appendChild(deleteButton)
@@ -115,7 +119,6 @@ export const EventsList = async () => {
 
           buttonConfirm.style.display = 'none'
           buttonDelete.style.display = 'block'
-          location.reload()
         })
 
         const isRegistered = event.attendees.some(
@@ -141,7 +144,6 @@ export const EventsList = async () => {
 
           buttonConfirm.style.display = 'block'
           buttonDelete.style.display = 'none'
-          location.reload()
         })
       } else {
         info.innerHTML = `
