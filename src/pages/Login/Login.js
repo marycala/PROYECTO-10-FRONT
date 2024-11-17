@@ -46,20 +46,24 @@ export const LoginForm = (fatherElement) => {
 }
 
 export const submitLogin = async (email, password, form) => {
-  const finalObject = { email, password }
+  const credentials = { email, password }
 
   try {
-    const response = await apiFetch('/api/v1/users/login', 'POST', finalObject)
+    const response = await apiFetch('/api/v1/users/login', 'POST', credentials)
 
-    if (response.status === 400) {
-      showMessage(form, 'Incorrect Email or password', true)
+    if (!response.ok) {
+      const errorData = await response.json()
+      showMessage(
+        form,
+        errorData.message || 'Incorrect email or password',
+        true
+      )
       return
     }
 
-    const finalResponse = await response.json()
+    const { token } = await response.json()
 
-    localStorage.setItem('token', finalResponse.token)
-    localStorage.setItem('user', JSON.stringify(finalResponse.user))
+    localStorage.setItem('token', token)
 
     showMessage(form, 'Login successful!', false)
     Home()
