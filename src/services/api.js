@@ -52,6 +52,7 @@ export const apiFetch = async (
 
     return response
   } catch (error) {
+    console.error('Fetch error in apiFetch:', error.message, error)
     return null
   }
 }
