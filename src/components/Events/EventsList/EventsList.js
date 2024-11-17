@@ -1,9 +1,9 @@
-import './EventsList.css'
 import { isAuthenticated } from '../../../utils/auth'
 import { formatDate } from '../../../utils/dateUtils'
 import { registerAttendance } from '../ConfirmAttendance/registerAttendance'
 import { deleteEvent } from '../DeleteEvent/DeleteEvent'
 import { showMessage } from '../../../utils/showMessage'
+import './EventsList.css'
 import { deleteAttendance } from '../DeleteAttendance/DeleteAttendance'
 import { apiFetch } from '../../../services/api'
 import { updateEvent } from '../UpdateEvent/UpdateEvent'
@@ -119,6 +119,7 @@ export const EventsList = async () => {
 
           buttonConfirm.style.display = 'none'
           buttonDelete.style.display = 'block'
+          location.reload()
         })
 
         const isRegistered = event.attendees.some(
@@ -144,6 +145,7 @@ export const EventsList = async () => {
 
           buttonConfirm.style.display = 'block'
           buttonDelete.style.display = 'none'
+          location.reload()
         })
       } else {
         info.innerHTML = `
