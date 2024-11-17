@@ -43,6 +43,15 @@ const submitEvent = async (form, main) => {
   if (form.elements.price.value === 'Free' || price === 0) {
     price = 0
   }
+
+  const eventDate = new Date(date)
+  const currentDate = new Date()
+  if (eventDate <= currentDate) {
+    showMessage(main, 'The event date must be in the future.', true)
+    hideLoader()
+    return
+  }
+
   const formattedDate = new Date(date).toISOString()
 
   const formData = new FormData()
