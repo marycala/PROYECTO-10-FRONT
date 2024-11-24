@@ -18,10 +18,12 @@ export const EventsList = async () => {
     const user = JSON.parse(localStorage.getItem('user'))
 
     if (events.length === 0) {
-      const noEventsMessage = document.createElement('p')
-      noEventsMessage.textContent = 'No events available at the moment.'
-      eventsContainer.append(noEventsMessage)
-      return eventsContainer
+      showMessage(
+        document.querySelector('main'),
+        'No events available at the moment.',
+        true
+      )
+      return
     }
 
     for (const event of events) {
