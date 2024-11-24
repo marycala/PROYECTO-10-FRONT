@@ -1,6 +1,5 @@
 import { isAuthenticated } from '../../../utils/auth'
 import { formatDate } from '../../../utils/dateUtils'
-import { showMessage } from '../../../utils/showMessage'
 import { showModal } from '../../../utils/showModal/showModal'
 import { registerAttendance } from '../ConfirmAttendance/registerAttendance'
 import { deleteAttendance } from '../DeleteAttendance/DeleteAttendance'
@@ -40,11 +39,10 @@ export const RenderEvent = (event, user) => {
     const attendeeList = document.createElement('ul')
 
     if (event.attendees.length === 0) {
-      showMessage(
-        document.querySelector('main'),
-        'No attendees for this event.',
-        true
-      )
+      const noAttendeesMessage = document.createElement('p')
+      noAttendeesMessage.textContent = 'No attendees for this event.'
+      noAttendeesMessage.style.fontStyle = 'italic'
+      attendeeList.append(noAttendeesMessage)
     } else {
       event.attendees.forEach((attendee) => {
         const attendeeItem = document.createElement('li')
