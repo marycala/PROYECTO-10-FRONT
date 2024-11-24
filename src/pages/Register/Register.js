@@ -85,7 +85,7 @@ const submitRegister = async (name, email, password, form) => {
     if (!res.ok) {
       const errorMessage =
         res.status === 400 ? 'Email is already in use' : 'An error has occurred'
-      showMessage(form, errorMessage, true)
+      showMessage(document.querySelector('main'), errorMessage, true)
       return
     } else {
       showMessage(
