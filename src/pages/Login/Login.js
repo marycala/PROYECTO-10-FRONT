@@ -39,6 +39,16 @@ export const LoginForm = (fatherElement) => {
     event.preventDefault()
     showLoader()
 
+    if (inputEmail.value.trim() === '' || inputPassword.value.trim() === '') {
+      showMessage(
+        document.querySelector('main'),
+        'Please fill in all fields.',
+        true
+      )
+      hideLoader()
+      return
+    }
+
     await submitLogin(inputEmail.value, inputPassword.value, form)
 
     hideLoader()
@@ -51,26 +61,26 @@ export const submitLogin = async (email, password, form) => {
   try {
     const response = await apiFetch('/api/v1/users/login', 'POST', credentials)
 
+    const data = await response.json()
+
     if (!response.ok) {
-      const errorData = await response.json()
       showMessage(
-        form,
-        errorData.message || 'Incorrect email or password',
+        document.querySelector('main'),
+        data.message || 'Incorrect email or password',
         true
       )
       return
+    } else {
+      localStorage.setItem('user', JSON.stringify(data.user))
+      localStorage.setItem('token', data.token)
+
+      showMessage(document.querySelector('main'), 'Login successful!', false)
+
+      Home()
     }
-
-    const { token } = await response.json()
-
-    localStorage.setItem('token', token)
-
-    showMessage(form, 'Login successful!', false)
-    Home()
-    Header()
   } catch (error) {
     showMessage(
-      form,
+      document.querySelector('main'),
       'An error occurred while logging in. Please try again.',
       true
     )
