@@ -13,11 +13,11 @@ export const CreateEvent = () => {
   Header(false)
 
   if (!isAuthenticated()) {
-    showMessage(
-      document.querySelector('main'),
-      'You do not have permission. Please log in.',
-      true
-    )
+    const message = document.createElement('p')
+    message.textContent = 'You do not have permission. Please log in.'
+    message.style.fontSize = '1.5rem'
+
+    main.appendChild(message)
     return
   }
 
