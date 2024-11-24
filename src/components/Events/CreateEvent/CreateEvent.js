@@ -13,11 +13,11 @@ export const CreateEvent = () => {
   Header(false)
 
   if (!isAuthenticated()) {
-    const message = document.createElement('p')
-    message.textContent = 'You do not have permission. Please log in.'
-    message.style.fontSize = '1.5rem'
-
-    main.appendChild(message)
+    showMessage(
+      document.querySelector('main'),
+      'You do not have permission. Please log in.',
+      true
+    )
     return
   }
 
@@ -47,7 +47,11 @@ const submitEvent = async (form, main) => {
   const eventDate = new Date(date)
   const currentDate = new Date()
   if (eventDate <= currentDate) {
-    showMessage(main, 'The event date must be in the future.', true)
+    showMessage(
+      document.querySelector('main'),
+      'The event date must be in the future.',
+      true
+    )
     hideLoader()
     return
   }
@@ -71,7 +75,11 @@ const submitEvent = async (form, main) => {
   const userId = user._id
 
   if (!userId) {
-    showMessage(main, 'User ID not found. Please log in again.', true)
+    showMessage(
+      document.querySelector('main'),
+      'User ID not found. Please log in again.',
+      true
+    )
     return
   }
 
@@ -84,14 +92,26 @@ const submitEvent = async (form, main) => {
 
     if (!res.ok) {
       const errorData = await res.json()
-      showMessage(main, errorData.error || 'Error creating the event', true)
+      showMessage(
+        document.querySelector('main'),
+        errorData.error || 'Error creating the event',
+        true
+      )
     }
 
-    showMessage(main, 'Event created successfully')
+    showMessage(
+      document.querySelector('main'),
+      'Event created successfully',
+      false
+    )
     hideLoader()
     Home()
   } catch (error) {
     hideLoader()
-    showMessage(main, 'Error creating the event. Please try again.', true)
+    showMessage(
+      document.querySelector('main'),
+      'Error creating the event. Please try again.',
+      true
+    )
   }
 }
