@@ -2,6 +2,7 @@ import { Header } from '../../components/Header/Header'
 import { showLoader, hideLoader } from '../../components/Loader/Loader'
 import { apiFetch } from '../../services/api'
 import { showMessage } from '../../utils/showMessage'
+import { Home } from '../Home/Home'
 import { submitLogin } from '../Login/Login'
 
 export const Register = async () => {
@@ -30,7 +31,7 @@ const RegisterForm = (fatherElement) => {
   inputName.type = 'text'
   inputEmail.type = 'email'
   inputPassword.type = 'password'
-  inputName.placeholder = 'Name'
+  inputName.placeholder = 'Name and surname'
   inputEmail.placeholder = 'Email'
   inputPassword.placeholder = '******'
   button.textContent = 'Register'
@@ -41,33 +42,41 @@ const RegisterForm = (fatherElement) => {
   form.addEventListener('submit', async (event) => {
     event.preventDefault()
 
+    const name = inputName.value.trim()
+    const email = inputEmail.value.trim()
+    const password = inputPassword.value.trim()
+
     showLoader(fatherElement)
 
-    await submitRegister(
-      inputName.value,
-      inputEmail.value,
-      inputPassword.value,
-      form
-    )
+    await submitRegister(name, email, password, form)
 
     hideLoader()
   })
 }
 
 const submitRegister = async (name, email, password, form) => {
-  if (password.lenght < 6 || password.lenght > 12) {
+  const userData = {
+    userName: name,
+    email: email,
+    password: password
+  }
+
+  if (name.length < 6) {
+    showMessage(
+      document.querySelector('main'),
+      'You have to introduce your name and surname',
+      true
+    )
+    return
+  }
+
+  if (password.length < 6 || password.lenght > 12) {
     showMessage(
       document.querySelector('main'),
       'Password must be between 6 and 12 characters.',
       true
     )
     return
-  }
-
-  const userData = {
-    userName: name,
-    email: email,
-    password: password
   }
 
   try {
@@ -79,10 +88,18 @@ const submitRegister = async (name, email, password, form) => {
       showMessage(form, errorMessage, true)
       return
     } else {
+      showMessage(
+        document.querySelector('main'),
+        'Registration successful! Redirecting...',
+        false
+      )
       await submitLogin(email, password, form)
-      showMessage(form, 'Registration successful! Redirecting...', false)
 
       form.reset()
+
+      setTimeout(() => {
+        Home()
+      }, 1500)
     }
   } catch (error) {
     showMessage(form, 'Connection error. Please try again later.', true)
